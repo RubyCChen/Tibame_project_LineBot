@@ -14,9 +14,13 @@ import configparser
 from richmenu import set_menu
 from quickreply import handle_text_message, operation_instruction,get_quick_reply_text
 from flexmessage import get_restaurant_info, flex_message
+import logging
+import traceback
 
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.DEBUG)
 
 # read channel assess token and channel secert
 config = configparser.ConfigParser()
@@ -119,6 +123,17 @@ def handle_sticker_message(event):
                 ]
             )
         )
+@app.errorhandler(500)
+def handle_500_error(e):
+    tb = traceback.format_exc()
+    app.logger.error(f'Internal Server Error: {request.url}, error: {e}, traceback: {tb}')
+    return "500 Internal Server Error", 500
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(e):
+    tb = traceback.format_exc()
+    app.logger.error(f'An unexpected error occurred: {request.url}, error: {e}, traceback: {tb}')
+    return "An unexpected error occurred", 500
 
 
 

@@ -29,8 +29,8 @@ HEADER = {
 def create_rich_menu():
     return {
         'size' : {'width':2500, 'height': 1686},
-        'selectd' : True,
-        'name' : 'richmenu-v3',
+        'selected' : True,
+        'name' : 'richmenu-v4',
         'chatBarText' : 'Tap to choose',
         'areas' :[
             {
@@ -55,7 +55,7 @@ def create_rich_menu():
             },
             {
                 'bounds': {'x': 59, 'y': 870 , 'width': 512 , 'height': 7651}, 
-                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/google_16998661926280/5'}                
+                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/google_16998661926280/dashboard?publish=yes'}                
             },
             {
                 'bounds': {'x': 1913, 'y': 870 , 'width': 512 , 'height': 7651}, 
@@ -108,17 +108,19 @@ def set_menu():
                 )
         
         richmenu_id = line_bot_api.create_rich_menu(
-            rich_menu_request= set_richmenu
-        ).rich_menu_id
+                rich_menu_request= set_richmenu
+            ).rich_menu_id
 
         with open(r'C:\Users\T14 Gen 3\Desktop\Project\Line\menu06.png', "rb") as f:
-            line_bot_blob_api.set_rich_menu_image(
-                rich_menu_id= richmenu_id,
-                body= bytearray(f.read()),
-                _headers= {'Content-type' : 'image/png'}
-            )
+                line_bot_blob_api.set_rich_menu_image(
+                rich_menu_id=richmenu_id,
+                body=bytearray(f.read()),
+                _headers={'Content-Type': 'image/png'}
+    )
 
-            line_bot_api.set_default_rich_menu(richmenu_id)
-            return f"Rich menu created and set as default with ID: {richmenu_id}"
+        line_bot_api.set_default_rich_menu(richmenu_id)
+        return f"Rich menu created and set as default with ID: {richmenu_id}"
+
+
 
 

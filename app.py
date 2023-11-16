@@ -15,7 +15,7 @@ from richmenu import set_menu
 from quickreply import handle_text_message, operation_instruction,get_quick_reply_text
 from flexmessage import get_restaurant_info, flex_message
 import logging
-import traceback
+
 
 
 app = Flask(__name__)
@@ -89,10 +89,6 @@ def handle_location(event):
         user_longitude = event.message.longitude
         radius_km = 10
 
-        print("用户会话数据:", user_data)
-        print("餐厅类型:", restaurant_type)
-        print("用户位置:", user_latitude, user_longitude)
-
         restaurant_info = get_restaurant_info(restaurant_type, user_longitude, user_latitude,radius_km)
 
         if not restaurant_info:
@@ -123,17 +119,6 @@ def handle_sticker_message(event):
                 ]
             )
         )
-@app.errorhandler(500)
-def handle_500_error(e):
-    tb = traceback.format_exc()
-    app.logger.error(f'Internal Server Error: {request.url}, error: {e}, traceback: {tb}')
-    return "500 Internal Server Error", 500
-
-@app.errorhandler(Exception)
-def handle_unexpected_error(e):
-    tb = traceback.format_exc()
-    app.logger.error(f'An unexpected error occurred: {request.url}, error: {e}, traceback: {tb}')
-    return "An unexpected error occurred", 500
 
 
 

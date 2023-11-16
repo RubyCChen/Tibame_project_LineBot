@@ -55,7 +55,7 @@ def create_rich_menu():
             },
             {
                 'bounds': {'x': 59, 'y': 870 , 'width': 512 , 'height': 7651}, 
-                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/2_16991738402680/Overall'}                
+                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/google_16998661926280/5'}                
             },
             {
                 'bounds': {'x': 1913, 'y': 870 , 'width': 512 , 'height': 7651}, 
@@ -111,7 +111,7 @@ def set_menu():
             rich_menu_request= set_richmenu
         ).rich_menu_id
 
-        with open(r'C:\Users\T14 Gen 3\Desktop\Project\Line\menu05.png', "rb") as f:
+        with open(r'C:\Users\T14 Gen 3\Desktop\Project\Line\menu06.png', "rb") as f:
             line_bot_blob_api.set_rich_menu_image(
                 rich_menu_id= richmenu_id,
                 body= bytearray(f.read()),

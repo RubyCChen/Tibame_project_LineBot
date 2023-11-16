@@ -17,13 +17,6 @@ def connect_to_db():
     database = db_config.get('database')
 
     try:
-        # connection = mysql.connector.connect(
-        #     host='localhost',
-        #     database='resturantinfo',
-        #     user='root',
-        #     password='password'
-        # )
-
         connection = mysql.connector.connect(
             host=host,
             port=port,

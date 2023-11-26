@@ -3,7 +3,7 @@ from linebot.v3 import WebhookHandler
 from linebot.v3.exceptions import InvalidSignatureError
 from linebot.v3.messaging import(
     Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage,
-    StickerMessage, FlexMessage, FlexContainer
+    StickerMessage, FlexMessage, FlexContainer, FlexCarousel
 )
 from linebot.v3.webhooks import(
     MessageEvent, TextMessageContent, LocationMessageContent, StickerMessageContent
@@ -12,8 +12,9 @@ import os
 import configparser
 
 from richmenu import set_menu
-from quickreply import handle_text_message, operation_instruction,get_quick_reply_text
+from quickreply import handle_text_message, operation_instruction, get_quick_reply_text
 from flexmessage import get_restaurant_info, flex_message
+from resume import flex_message_resume, resumes
 import logging
 
 
@@ -75,6 +76,14 @@ def handle_message(event):
         elif get_quick_reply_text(text):
             user_session[user_id] = {'restaurant_type': text}
             handle_text_message(event)
+        
+        elif text == "個人履歷":
+            resume_content = flex_message_resume(resumes)
+            reply_resume = FlexMessage(altText="Resume", contents=FlexContainer.from_dict(resume_content))
+            line_bot_api.reply_message(
+                    ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=[reply_resume]))
 
 
 # when user send location then send the recommand information
@@ -87,7 +96,7 @@ def handle_location(event):
         restaurant_type = user_data.get('restaurant_type')
         user_latitude = event.message.latitude
         user_longitude = event.message.longitude
-        radius_km = 10
+        radius_km = 5
 
         restaurant_info = get_restaurant_info(restaurant_type, user_longitude, user_latitude,radius_km)
 
@@ -97,6 +106,7 @@ def handle_location(event):
                     ReplyMessageRequest(
                         reply_token=event.reply_token,
                         messages=[reply_text]))
+        
             
         else:
             flex_content = flex_message(restaurant_info)

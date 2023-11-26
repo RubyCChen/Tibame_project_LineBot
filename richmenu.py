@@ -31,7 +31,7 @@ def create_rich_menu():
         'size' : {'width':2500, 'height': 1686},
         'selected' : True,
         'name' : 'richmenu-v4',
-        'chatBarText' : 'Tap to choose',
+        'chatBarText' : '功能選單',
         'areas' :[
             {
                 'bounds': {'x': 666,  'y': 870 , 'width': 512 , 'height': 765}, 
@@ -55,11 +55,11 @@ def create_rich_menu():
             },
             {
                 'bounds': {'x': 59, 'y': 870 , 'width': 512 , 'height': 7651}, 
-                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/google_16998661926280/dashboard?publish=yes'}                
+                'action': {'type': 'uri', 'uri': 'https://public.tableau.com/app/profile/luna.chen6881/viz/Google_17006374914760/dashborad?publish=yes'}                
             },
             {
                 'bounds': {'x': 1913, 'y': 870 , 'width': 512 , 'height': 7651}, 
-                'action': {'type': 'uri', 'uri': 'https://drive.google.com/drive/folders/1Mfrr7OX2A4CLUP3tG4TmCjLXIsFVSZdN?usp=drive_link'}                
+                'action': {'type': 'message', 'text': '個人履歷'}                
             },
             {
                 'bounds': {'x': 59, 'y': 49 , 'width': 512 , 'height': 765}, 
@@ -121,6 +121,10 @@ def set_menu():
         line_bot_api.set_default_rich_menu(richmenu_id)
         return f"Rich menu created and set as default with ID: {richmenu_id}"
 
+
+# if __name__ == "__main__":
+#     result = set_menu()
+#     print(result)
 
 
 

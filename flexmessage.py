@@ -24,6 +24,7 @@ def connect_to_db():
             password=password,
             database=database
         )
+
         if connection.is_connected():
             print("Connected to DB.")
         return connection
@@ -31,25 +32,37 @@ def connect_to_db():
     except Error as e:
         print("Error:", e)
         return None
-    
+
+
 # from database get user needed restaurant info
-def get_restaurant_info(restaurant_type, user_longitude, user_latitude, radius):
+def get_restaurant_info(restaurant_type_text, user_longitude, user_latitude, radius):
     conn = connect_to_db()
     if conn is None:
         return None
     
     cursor = conn.cursor()
-    query = (
+    
+    # transfer restaurant type to number
+    type_query = """
+        SELECT type, type_number
+        FROM restaurant_type
+        """
+    cursor.execute(type_query)
+
+    type_mapping = {row[0]: row[1] for row in cursor}
+    restaurant_type = type_mapping.get(restaurant_type_text)
+
+    info_query = (
             """
             SELECT *,
                 ST_Distance_Sphere(point(longitude, latitude), point(%s, %s)) AS distance
             FROM storeinfo
-            WHERE restaurant_type LIKE %s
+            WHERE type = %s
             AND ST_Distance_Sphere(point(longitude, latitude), point(%s, %s)) <= %s
             AND score > 9;"""
     )
-    params = (user_longitude, user_latitude, f"%{restaurant_type}%", user_longitude, user_latitude, radius * 1000)
-    cursor.execute(query,params)
+    params = (user_longitude, user_latitude, restaurant_type, user_longitude, user_latitude, radius * 1000)
+    cursor.execute(info_query, params)
     result = cursor.fetchall()
     # print("Get the info: ", result)
     cursor.close()
@@ -70,9 +83,9 @@ def flex_message(restaurant_info):
         restaurant_phone = restaurant[4]
         restaurant_longitude = float(restaurant[5])
         restaurant_latitude = float(restaurant[6])
-        restaurant_training_score = float(restaurant[9])
-        restaurant_photo = restaurant[10]
-        restaurant_website = restaurant[11]
+        restaurant_training_score = float(restaurant[8])
+        restaurant_photo = restaurant[9]
+        restaurant_website = restaurant[10]
         star_num = min(round(restaurant_training_score),5)
 
     # according to training score then set the star number
@@ -140,7 +153,7 @@ def flex_message(restaurant_info):
                         "contents": [
                         {
                             "type": "text",
-                            "text": "Place",
+                            "text": "地址",
                             "color": "#aaaaaa",
                             "size": "sm",
                             "flex": 1
@@ -170,7 +183,7 @@ def flex_message(restaurant_info):
                     "height": "sm",
                     "action": {
                     "type": "uri",
-                    "label": "CALL",
+                    "label": "預約專線",
                     "uri": "tel:{}".format(restaurant_phone)
                     }
                 },
@@ -180,7 +193,7 @@ def flex_message(restaurant_info):
                     "height": "sm",
                     "action": {
                     "type": "uri",
-                    "label": "WEBSITE",
+                    "label": "粉絲專頁",
                     "uri": restaurant_website
                     }
                 },
@@ -197,5 +210,6 @@ def flex_message(restaurant_info):
 
     return bubble
     
+
 
 
